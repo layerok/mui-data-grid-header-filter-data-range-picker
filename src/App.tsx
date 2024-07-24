@@ -1,10 +1,35 @@
 import { ThemeProvider as MuiThemeProvider, createTheme } from "@mui/material";
-import { DataGridPremium, GridColDef } from "@mui/x-data-grid-premium";
+import {
+  DataGridPremium,
+  GridColDef,
+  GridFilterOperator,
+} from "@mui/x-data-grid-premium";
 import { LocalizationProvider } from "@mui/x-date-pickers-pro";
 import { AdapterDayjs } from "@mui/x-date-pickers-pro/AdapterDayjs";
 import "dayjs/locale/de";
 import dayjs from "dayjs";
 import { DateRangeHeaderFilter } from "./DateRangerHeaderFilter.tsx";
+
+const betweenDateRangeFilterOperator: GridFilterOperator = {
+  label: "",
+  value: "between-date-range",
+  headerLabel: "",
+  getApplyFilterFn: (filterItem) => {
+    if (!filterItem.field || !filterItem.value || !filterItem.operator) {
+      return null;
+    }
+    const [startRaw, endRaw] = filterItem.value.split(",");
+    const start = dayjs(startRaw || null);
+    const end = dayjs(endRaw || null);
+    if (!start.isValid() || !end.isValid()) {
+      return null;
+    }
+    return (rawValue) => {
+      const value = dayjs(rawValue);
+      return value.isValid() && value.isAfter(start) && value.isBefore(end);
+    };
+  },
+};
 
 const rows = [
   {
@@ -30,30 +55,7 @@ const columns: GridColDef[] = [
     field: "birth_date",
     minWidth: 270,
     renderHeaderFilter: DateRangeHeaderFilter,
-    filterOperators: [
-      {
-        label: "Between",
-        value: "date-range",
-        headerLabel: "Between date range",
-        getApplyFilterFn: (filterItem) => {
-          if (!filterItem.field || !filterItem.value || !filterItem.operator) {
-            return null;
-          }
-          const [startRaw, endRaw] = filterItem.value.split(",");
-          const start = dayjs(startRaw || null);
-          const end = dayjs(endRaw || null);
-          if (!start.isValid() || !end.isValid()) {
-            return null;
-          }
-          return (rawValue) => {
-            const value = dayjs(rawValue);
-            return (
-              value.isValid() && value.isAfter(start) && value.isBefore(end)
-            );
-          };
-        },
-      },
-    ],
+    filterOperators: [betweenDateRangeFilterOperator],
   },
 ];
 
