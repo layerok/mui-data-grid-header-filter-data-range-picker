@@ -16,7 +16,7 @@ export const DateRangeHeaderFilter = (props: GridRenderHeaderFilterProps) => {
   const {
     item,
     // inputRef,
-    // colDef
+    // colDef,
   } = props;
   const apiRef = useGridApiContext();
 
@@ -62,30 +62,18 @@ export const DateRangeHeaderFilter = (props: GridRenderHeaderFilterProps) => {
         setHasError(range.some((item) => item != null));
       }}
       onChange={(range) => {
-        const [start, end] = range;
-
         setRange(range);
-
-        if (start && start.isValid() && end && end.isValid()) {
-          const value =
-            start.format("YYYY-MM-DD") + "," + end.format("YYYY-MM-DD");
-
-          applyFilterChanges({
-            ...item,
-            value,
-          });
-        } else {
-          applyFilterChanges({
-            ...item,
-            value: null,
-          });
-        }
-
-        if ((start && !end) || (end && !start)) {
-          setHasError(true);
-        } else {
-          setHasError(false);
-        }
+        const [start, end] = range;
+        setHasError(
+          (start != null && end == null) || (end != null && start == null),
+        );
+        applyFilterChanges({
+          ...item,
+          value:
+            start?.isValid() && end?.isValid()
+              ? start.format("YYYY-MM-DD") + "," + end.format("YYYY-MM-DD")
+              : null,
+        });
       }}
       slots={{
         field: SingleInputDateRangeField,
@@ -103,7 +91,9 @@ export const DateRangeHeaderFilter = (props: GridRenderHeaderFilterProps) => {
           // onFocus: handleFocus,
           // onBlur: handleBlur,
           error: hasError && !open,
-          //inputRef,
+          InputProps: {
+            //ref: inputRef,
+          },
           sx: {
             marginTop: "16px",
             width: "220px",
