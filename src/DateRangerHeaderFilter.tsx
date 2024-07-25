@@ -15,7 +15,7 @@ import { TextField } from "@mui/material";
 export const DateRangeHeaderFilter = (props: GridRenderHeaderFilterProps) => {
   const {
     item,
-    // inputRef,
+    inputRef,
     // colDef,
   } = props;
   const apiRef = useGridApiContext();
@@ -92,7 +92,7 @@ export const DateRangeHeaderFilter = (props: GridRenderHeaderFilterProps) => {
           // onBlur: handleBlur,
           error: hasError && !open,
           InputProps: {
-            //ref: inputRef,
+            ref: inputRef,
           },
           sx: {
             marginTop: "16px",
