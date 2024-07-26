@@ -14,6 +14,7 @@ const betweenDateRangeFilterOperator: GridFilterOperator = {
   label: "",
   value: "between-date-range",
   headerLabel: "",
+  InputComponent: DateRangeHeaderFilter,
   getApplyFilterFn: (filterItem) => {
     if (!filterItem.field || !filterItem.value || !filterItem.operator) {
       return null;
@@ -54,7 +55,6 @@ const columns: GridColDef[] = [
     headerName: "Birth date",
     field: "birth_date",
     minWidth: 270,
-    renderHeaderFilter: DateRangeHeaderFilter,
     filterOperators: [betweenDateRangeFilterOperator],
   },
 ];

@@ -13,11 +13,7 @@ import dayjs from "dayjs";
 import { TextField } from "@mui/material";
 
 export const DateRangeHeaderFilter = (props: GridRenderHeaderFilterProps) => {
-  const {
-    item,
-    inputRef,
-    // colDef,
-  } = props;
+  const { item, inputRef } = props;
   const apiRef = useGridApiContext();
 
   const [range, setRange] = useState<DateRange<dayjs.Dayjs>>([null, null]);
@@ -31,25 +27,7 @@ export const DateRangeHeaderFilter = (props: GridRenderHeaderFilterProps) => {
     },
     [apiRef, item],
   );
-  // const handleFocus = () => {
-  //   apiRef.current.startHeaderFilterEditMode(colDef.field);
-  // };
-  //
-  // const handleBlur = (event: React.FocusEvent) => {
-  //   apiRef.current.stopHeaderFilterEditMode();
-  //   // Blurring an input element should reset focus state only if `relatedTarget` is not the header filter cell
-  //   if (!event.relatedTarget?.className.includes("columnHeader")) {
-  //     apiRef.current.setState((state) => ({
-  //       ...state,
-  //       focus: {
-  //         cell: null,
-  //         columnHeader: null,
-  //         columnHeaderFilter: null,
-  //         columnGroupHeader: null,
-  //       },
-  //     }));
-  //   }
-  // };
+
   const [hasError, setHasError] = useState(false);
   const [open, setOpen] = useState(false);
   return (
@@ -57,6 +35,7 @@ export const DateRangeHeaderFilter = (props: GridRenderHeaderFilterProps) => {
       open={open}
       onOpen={() => setOpen(true)}
       onClose={() => setOpen(false)}
+      inputRef={inputRef as any}
       value={range}
       onError={(range) => {
         setHasError(range.some((item) => item != null));
@@ -88,12 +67,9 @@ export const DateRangeHeaderFilter = (props: GridRenderHeaderFilterProps) => {
         },
         textField: {
           variant: "standard",
-          // onFocus: handleFocus,
-          // onBlur: handleBlur,
+
           error: hasError && !open,
-          InputProps: {
-            ref: inputRef,
-          },
+
           sx: {
             marginTop: "16px",
             width: "220px",
